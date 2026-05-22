@@ -1,0 +1,138 @@
+<php>   
+
+</php>
+
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootstrap 手機版問卷</title>
+
+    <!-- 1. 引入 Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* 你可以在這裡加入你的背景圖 */
+        body {
+            background: url('https://lh3.googleusercontent.com/u/0/d/1LXQ3pcSpRuVaWD8IT5x7UYnh99Clg7yT') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4 bg-black bg-opacity-50">
+            <h2 class="text-center text-primary text-orange">舊石器時代</h2>
+            
+            <form id="PaleolithicAgeForm" onsubmit="return validateForm(event)">
+                <div class="mb-3">
+                    <label class="form-label text-white">遺物</label>
+                    <input type="text" id="PaleolithicAgeRelic" class="form-control" placeholder="輸入遺物名稱">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-white">遺址</label>
+                    <input type="text" id="PaleolithicAgeSite" class="form-control" placeholder="輸入遺址名稱">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">提交</button>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4 bg-black bg-opacity-50">
+            <h2 class="text-center text-primary text-orange">新石器時代</h2>
+            
+            <form id="NeolithicAgeForm" onsubmit="return validateForm(event)">
+                <div class="mb-3">
+                    <label class="form-label text-white">遺物</label>
+                    <input type="text" id="NeolithicAgeRelic" class="form-control" placeholder="輸入遺物名稱">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-white">遺址</label>
+                    <input type="text" id="NeolithicAgeSite" class="form-control" placeholder="輸入遺址名稱">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">提交</button>
+            </form>
+
+        </div>
+    </div>
+
+<!-- 2. 引入 Bootstrap Bundle JS (包含 Popper，用於下拉選單等) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 監聽表單的送出事件 (submit)
+        document.getElementById('PaleolithicAgeForm').addEventListener('submit', function(event) {
+            
+            // 1. 阻止表單預設的重整網頁動作
+            event.preventDefault();
+
+            // 2. 抓取使用者的輸入值
+            // .trim() 的功能是自動刪除使用者不小心在前後按到的「空白鍵」
+            const userRelic = document.getElementById('PaleolithicAgeRelic').value.trim();
+            const userSite = document.getElementById('PaleolithicAgeSite').value.trim();
+
+            // 3. 設定正確答案與指定要跳轉的網頁
+            const correctRelic = "骨針縫獸皮";
+            const correctSite = "八仙洞";
+            
+            // 這裡填入你答對時，想要強制跳轉的手機問卷網頁網址（如 Google 表單或 Typeform）
+            const targetUrl = "file:///D:/Visual_Studio_Code/PaleolithicAge.html"; 
+
+            // 4. 進行條件判斷 (&& 代表「而且」，兩個都要成立)
+            if (userRelic === correctRelic && userSite === correctSite) {
+                
+                alert("回答正確！即將為您跳轉至問卷頁面...");
+                
+                // 答對了，執行跳轉到指定的網頁
+                window.location.href = targetUrl;
+                
+            } else {
+                
+                // 答錯了，跳出警告，且不會跳轉頁面
+                alert("答案不正確，請再想想看石器時代的課本內容喔！");
+                
+            }
+        });
+    </script>
+    <script>
+        // 監聽表單的送出事件 (submit)
+        document.getElementById('NeolithicAgeForm').addEventListener('submit', function(event) {
+            
+            // 1. 阻止表單預設的重整網頁動作
+            event.preventDefault();
+
+            // 2. 抓取使用者的輸入值
+            // .trim() 的功能是自動刪除使用者不小心在前後按到的「空白鍵」
+            const userRelic = document.getElementById('NeolithicAgeRelic').value.trim();
+            const userSite = document.getElementById('NeolithicAgeSite').value.trim();
+
+            // 3. 設定正確答案與指定要跳轉的網頁
+            const correctRelic = "卑南文化帶突起環狀玦形玉耳飾";
+            const correctSite = "墾丁";
+            
+            // 這裡填入你答對時，想要強制跳轉的手機問卷網頁網址（如 Google 表單或 Typeform）
+            const targetUrl = "file:///D:/Visual_Studio_Code/NeolithicAge.html"; 
+
+            // 4. 進行條件判斷 (&& 代表「而且」，兩個都要成立)
+            if (userRelic === correctRelic && userSite === correctSite) {
+                
+                alert("回答正確！即將為您跳轉至問卷頁面...");
+                
+                // 答對了，執行跳轉到指定的網頁
+                window.location.href = targetUrl;
+                
+            } else {
+                
+                // 答錯了，跳出警告，且不會跳轉頁面
+                alert("答案不正確，請再想想看石器時代的課本內容喔！");
+                
+            }
+        });
+    </script>
+</body>
+</html>

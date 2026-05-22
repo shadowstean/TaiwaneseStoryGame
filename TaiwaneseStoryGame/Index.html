@@ -20,12 +20,26 @@
             min-height: 100vh;
             margin: 0;
         }
+        .text-orange {
+            color: #ff8c00 !important;
+        }
+        .btn-orange {
+    background-color: #ff8c00 !important; /* 你的主色橘色 */
+    border-color: #ff8c00 !important;     /* 邊框顏色 */
+        }
+
+/* 加上滑鼠滑過或手指點擊時的加深效果，體驗會更好 */
+.btn-orange:hover, .btn-orange:active, .btn-orange:focus {
+    background-color: #e07b00 !important; /* 點擊時顏色稍微變深 */
+    border-color: #e07b00 !important;
+    box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.25) !important; /* 點擊時的微光外圈 */
+}
     </style>
 </head>
 <body>
-
+<audio id="bgMusic" src="https://lh3.googleusercontent.com/u/0/d/1LXQ3pcSpRuVaWD8IT5x7UYnh99Clg7yT" loop></audio>
     <div class="container mt-5">
-        <div class="card shadow-lg p-4 bg-black bg-opacity-65">
+        <div class="card shadow-lg p-4 bg-black bg-opacity-25">
             <h2 class="text-center text-primary text-orange">舊石器時代</h2>
             
             <form id="PaleolithicAgeForm" onsubmit="return validateForm(event)">
@@ -37,16 +51,9 @@
                     <label class="form-label text-white">遺址</label>
                     <input type="text" id="PaleolithicAgeSite" class="form-control" placeholder="輸入遺址名稱">
                 </div>
-                <button type="submit" class="btn btn-primary w-100">提交</button>
             </form>
-
-        </div>
-    </div>
-
-    <div class="container mt-5">
-        <div class="card shadow-lg p-4 bg-black bg-opacity-65">
-            <h2 class="text-center text-primary text-orange">新石器時代</h2>
             
+            <h2 class="text-center text-primary text-orange">新石器時代</h2>
             <form id="NeolithicAgeForm" onsubmit="return validateForm(event)">
                 <div class="mb-3">
                     <label class="form-label text-white">遺物</label>
@@ -56,16 +63,9 @@
                     <label class="form-label text-white">遺址</label>
                     <input type="text" id="NeolithicAgeSite" class="form-control" placeholder="輸入遺址名稱">
                 </div>
-                <button type="submit" class="btn btn-primary w-100">提交</button>
             </form>
 
-        </div>
-    </div>
-
-    <div class="container mt-5">
-        <div class="card shadow-lg p-4 bg-black bg-opacity-65">
             <h2 class="text-center text-primary text-orange">鐵器時代</h2>
-            
             <form id="IronAgeForm" onsubmit="return validateForm(event)">
                 <div class="mb-3">
                     <label class="form-label text-white">遺物</label>
@@ -75,11 +75,11 @@
                     <label class="form-label text-white">遺址</label>
                     <input type="text" id="IronAgeSite" class="form-control" placeholder="輸入遺址名稱">
                 </div>
-                <button type="submit" class="btn btn-primary w-100">提交</button>
+                <button type="submit" class="btn btn-orange w-100">提交</button>
             </form>
-
         </div>
     </div>
+
 
 <!-- 2. 引入 Bootstrap Bundle JS (包含 Popper，用於下拉選單等) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -188,5 +188,7 @@
             }
         });
     </script>
+
+
 </body>
 </html>

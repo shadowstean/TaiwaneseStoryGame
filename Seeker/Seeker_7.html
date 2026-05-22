@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seeker Ending - 記憶的守護者</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            /* 保持與所有關卡完全相同的 Google 雲端硬碟圖片直連網址 */
+            background: url('https://lh3.googleusercontent.com/u/0/d/1LXQ3pcSpRuVaWD8IT5x7UYnh99Clg7yT') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .text-orange {
+            color: #ff8c00 !important;
+        }
+        .btn-orange {
+            background-color: #ff8c00 !important;
+            border-color: #ff8c00 !important;
+            letter-spacing: 2px;
+        }
+        .btn-orange:hover, .btn-orange:active, .btn-orange:focus {
+            background-color: #e07b00 !important;
+            border-color: #e07b00 !important;
+            box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.25) !important;
+        }
+
+        /* 彈出視窗內的文字排版 */
+        .typewriter-text {
+            white-space: pre-line; /* 讓 \n 換行符號生效 */
+            line-height: 2;       /* 結局感拉滿的寬鬆行高 */
+            letter-spacing: 1.5px; /* 質感字距 */
+            font-size: 1.1rem;
+        }
+        /* 彈出視窗的神祕深紫色背景 */
+        .custom-modal-content {
+            background-color: #120c24 !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" src="https://docs.google.com/uc?export=download&id=1NxMhw9oB3QZw1Qdopaxq2mtxVtHB1bOd" loop autoplay></audio>
+
+    <div class="modal fade" id="endingModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-white custom-modal-content shadow-lg">
+                <div class="modal-body p-4 text-center">
+                    
+                    <h3 class="text-orange fw-bold mb-2">1. 保留歷史</h3>
+                    <h5 class="text-muted mb-4">（守護者結局）</h5>
+                    
+                    <h5 id="endingText" class="typewriter-text fw-normal mb-4"></h5>
+                    
+                    <div id="actionArea" class="d-none">
+                        <hr class="border-secondary my-4">
+                        <button type="button" class="btn btn-orange w-100 text-white fw-bold py-2" onclick="restartGame()">
+                            結束本次歷史調查
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4 bg-black bg-opacity-25 text-center text-white">
+            <h2 class="text-orange mb-3">【 結局一：記憶的守護者 】</h2>
+            <p class="lead">感謝你的參與，歷史因你而完整。</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // 依照圖片內容設定的結局一文字
+        const endingIntroText = "你選擇將所有記憶碎片完整保存，讓過去的聲音得以延續。\n古老的文物重新綻放光芒，塵封的故事再次被世人看見。\n那些曾經被遺忘的名字與足跡，重新在這座島嶼上留下印記。\n歷史並未停留在過去，而是在你的守護之下，成為照亮未來的火光。\n\n你成為了記憶的守護者。";
+        
+        let index = 0;
+        let endingModal;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            endingModal = new bootstrap.Modal(document.getElementById('endingModal'));
+            endingModal.show();
+            
+            setTimeout(typeWriter, 600);
+
+            // 全螢幕無感啟動背景音樂機制
+            const startMusicSilently = () => {
+                const music = document.getElementById("bgMusic");
+                if (music) {
+                    music.play().then(() => {
+                        document.removeEventListener('click', startMusicSilently);
+                        document.removeEventListener('touchstart', startMusicSilently);
+                        document.removeEventListener('scroll', startMusicSilently);
+                    }).catch(err => console.log("等待玩家操作中..."));
+                }
+            };
+
+            document.addEventListener('click', startMusicSilently);
+            document.addEventListener('touchstart', startMusicSilently);
+            document.addEventListener('scroll', startMusicSilently);
+        });
+
+        // 打字機功能
+        function typeWriter() {
+            if (index < endingIntroText.length) {
+                document.getElementById("endingText").innerHTML += endingIntroText.charAt(index);
+                index++;
+                // 結局段落適合用稍慢、沉穩的速度閱讀（100ms）
+                setTimeout(typeWriter, 100); 
+            } else {
+                document.getElementById("actionArea").classList.remove("d-none");
+            }
+        }
+
+        // 點擊結束調查按鈕（可以設定回到第一關首頁，或是彈出感謝視窗）
+        function restartGame() {
+            alert("歷史調查已全部結束，辛苦你了，探知者！");
+            // 這裡預設可以導回你的遊戲主首頁檔案，例如第一關：
+            // window.location.href = "Seeker.html"; 
+        }
+    </script>
+</body>
+</html>

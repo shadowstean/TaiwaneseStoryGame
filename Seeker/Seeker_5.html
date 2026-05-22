@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seeker 5 - 走向民主這條路</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            /* 保持與前幾關相同的 Google 雲端硬碟圖片直連網址 */
+            background: url('https://lh3.googleusercontent.com/u/0/d/1LXQ3pcSpRuVaWD8IT5x7UYnh99Clg7yT') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .text-orange {
+            color: #ff8c00 !important;
+        }
+        .btn-orange {
+            background-color: #ff8c00 !important;
+            border-color: #ff8c00 !important;
+        }
+        .btn-orange:hover, .btn-orange:active, .btn-orange:focus {
+            background-color: #e07b00 !important;
+            border-color: #e07b00 !important;
+            box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.25) !important;
+        }
+
+        /* 彈出視窗內的文字排版 */
+        .typewriter-text {
+            white-space: pre-line; /* 讓 \n 換行符號生效 */
+            line-height: 1.8;       /* 舒適行高 */
+            letter-spacing: 1px;   /* 質感字距 */
+            font-size: 1.05rem;
+        }
+        /* 彈出視窗的神祕深紫色背景 */
+        .custom-modal-content {
+            background-color: #120c24 !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 15px;
+        }
+        /* 題目列表標號樣式 */
+        .title-number {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ff8c00;
+            width: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" src="https://docs.google.com/uc?export=download&id=1NxMhw9oB3QZw1Qdopaxq2mtxVtHB1bOd" loop autoplay></audio>
+
+    <div class="modal fade" id="missionModal5" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-white custom-modal-content shadow-lg">
+                <div class="modal-body p-4">
+                    
+                    <h5 id="missionText5" class="typewriter-text fw-normal mb-4 text-center"></h5>
+                    
+                    <div id="inputArea" class="d-none">
+                        <hr class="border-secondary my-4">
+                        <h6 class="text-orange fw-bold mb-3 text-center">【請依序填入這個展區的四大標題】</h6>
+                        
+                        <form id="modalAnwserForm" onsubmit="return checkModalAnswer(event)">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="title-number">1.</div>
+                                <input type="text" id="titleAns1" class="form-control bg-dark text-white border-secondary" placeholder="請輸入第一個標題" autocomplete="off" required>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="title-number">2.</div>
+                                <input type="text" id="titleAns2" class="form-control bg-dark text-white border-secondary" placeholder="請輸入第二個標題" autocomplete="off" required>
+                            </div>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="title-number">3.</div>
+                                <input type="text" id="titleAns3" class="form-control bg-dark text-white border-secondary" placeholder="請輸入第三個標題" autocomplete="off" required>
+                            </div>
+                            <div class="d-flex align-items-center mb-4">
+                                <div class="title-number">4.</div>
+                                <input type="text" id="titleAns4" class="form-control bg-dark text-white border-secondary" placeholder="請輸入第四個標題" autocomplete="off" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-orange w-100 text-white fw-bold py-2">解開謎題</button>
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4 bg-black bg-opacity-25 text-center text-white">
+            <h2 class="text-orange mb-3">恭喜進入下一階段</h2>
+            <p class="lead">你已成功依序拼湊出四大歷史標題，見證了台灣走向民主這條路！</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // 依照圖片內容設定的第五關引言文字
+        const introText5 = "再來前往「走向民主這條路」\n\n1945 年，戰爭結束後\n臺灣迎來新的統治者\n...\n人們原本以為黎明將至卻再次走入漫長\n而沉重的黑夜\n在戒嚴與壓控之下許多聲音被迫沉默\n但仍有人在黑暗中守護自由的火種。\n隨著時代推進，越來越多人站了出來\n...\n以對話取代恐懼以選擇打破沉默\n這條通往民主的道路曲折而艱辛\n卻也凝聚了無數臺灣人共同追尋自由\n與希望的意志。\n\n這個展區有四大標題請依序填入";
+        
+        let index = 0;
+        let missionModal;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            missionModal = new bootstrap.Modal(document.getElementById('missionModal5'));
+            missionModal.show();
+            
+            setTimeout(typeWriter, 600);
+
+            // 全螢幕無感啟動背景音樂機制
+            const startMusicSilently = () => {
+                const music = document.getElementById("bgMusic");
+                if (music) {
+                    music.play().then(() => {
+                        document.removeEventListener('click', startMusicSilently);
+                        document.removeEventListener('touchstart', startMusicSilently);
+                        document.removeEventListener('scroll', startMusicSilently);
+                    }).catch(err => console.log("等待玩家操作中..."));
+                }
+            };
+
+            document.addEventListener('click', startMusicSilently);
+            document.addEventListener('touchstart', startMusicSilently);
+            document.addEventListener('scroll', startMusicSilently);
+        });
+
+        // 打字機功能
+        function typeWriter() {
+            if (index < introText5.length) {
+                document.getElementById("missionText5").innerHTML += introText5.charAt(index);
+                index++;
+                // 保持流暢的 80ms 播放速度
+                setTimeout(typeWriter, 80); 
+            } else {
+                document.getElementById("inputArea").classList.remove("d-none");
+            }
+        }
+
+        // 驗證視窗內的四大標題答案
+        function checkModalAnswer(event) {
+            event.preventDefault();
+            
+            // 抓取 4 個輸入框的值並清除所有空格（防呆）
+            const userAns1 = document.getElementById('titleAns1').value.replace(/\s+/g, "");
+            const userAns2 = document.getElementById('titleAns2').value.replace(/\s+/g, "");
+            const userAns3 = document.getElementById('titleAns3').value.replace(/\s+/g, "");
+            const userAns4 = document.getElementById('titleAns4').value.replace(/\s+/g, "");
+
+            // 標準答案定義
+            const correct1 = "反共復國基地";
+            const correct2 = "一同走過的記憶";
+            const correct3 = "經濟奇蹟的幕後";
+            const correct4 = "社會力的爆發";
+
+            // 檢查是否完全正確
+            if (userAns1 === correct1 && userAns2 === correct2 && userAns3 === correct3 && userAns4 === correct4) {
+                alert("答案正確！四大歷史標題已順利解開！");
+                window.location.href = "https://shadowstean.github.io/TaiwaneseStoryGame/Seeker/Seeker_6.html";
+                const music = document.getElementById("bgMusic");
+                if (music) music.play().catch(e => console.log(e));
+
+                missionModal.hide();
+            } else {
+                alert("四大標題的內容或順序似乎不太對，請對照展區板面再確認看看喔！");
+            }
+        }
+    </script>
+</body>
+</html>

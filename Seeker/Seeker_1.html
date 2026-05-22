@@ -23,15 +23,15 @@
             border-color: #ff8c00 !important;     /* 邊框顏色 */
         }
 
-        /* 加上滑鼠滑過或手指點擊時的加深效果，體驗會更好 */
+        /* 加上滑鼠滑過或手指點擊時的加深效果 */
         .btn-orange:hover, .btn-orange:active, .btn-orange:focus {
-            background-color: #e07b00 !important; /* 點擊時顏色稍微變深 */
+            background-color: #e07b00 !important;
             border-color: #e07b00 !important;
-            box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.25) !important; /* 點擊時的微光外圈 */
+            box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.25) !important;
         }
 
         /* 彈出視窗內的文字排版 */
-        #welcomeText {
+        .typewriter-text {
             white-space: pre-line; /* 讓文字中的 \n 換行符號生效 */
             line-height: 2;       /* 增加行高，手機看更舒適 */
             letter-spacing: 2px;   /* 字距微調，增加質感 */
@@ -53,13 +53,23 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content text-white custom-modal-content shadow-lg">
                 <div class="modal-body text-center p-4">
-                    
-                    <h5 id="welcomeText" class="fw-normal mb-4"></h5>
-                    
+                    <h5 id="welcomeText" class="typewriter-text fw-normal mb-4"></h5>
                     <button type="button" id="startBtn" class="btn btn-outline-light w-100 fw-bold d-none" onclick="startAdventure()">
                         開始穿越
                     </button>
-                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="missionModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-white custom-modal-content shadow-lg">
+                <div class="modal-body text-center p-4">
+                    <h5 id="missionText" class="typewriter-text fw-normal mb-4"></h5>
+                    <button type="button" id="acceptBtn" class="btn btn-warning w-100 fw-bold d-none" onclick="closeMissionModal()">
+                        接受任務
+                    </button>
                 </div>
             </div>
         </div>
@@ -69,7 +79,6 @@
         <div class="card shadow-lg p-4 bg-black bg-opacity-25">
             
             <form id="totalHistoryForm">
-                
                 <h2 class="text-center text-orange mb-3">舊石器時代</h2>
                 <div class="mb-3">
                     <label class="form-label text-white">遺物</label>
@@ -109,74 +118,86 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // --- 1. 打字機與音樂控制區 ---
+        // 文字資料定義
         const introText = "歡迎各位探知者參與本次的歷史調查\n由於歷史有很多資料不見\n各位探知者們將收集消失的歷史\n本次調查的地方為「台灣」 如果準備好的話\n我們即將進行穿越";
-        let index = 0;
+        const taskText = "目前來到「最初的抵岸」\n由於各時代的物件消失\n請各位在不同時代尋找特別的物件\n並分別填入對應時代的正確答案";
+        
+        let index1 = 0;
+        let index2 = 0;
+        let myModal1, myModal2;
 
-        // 網頁載入完成自動跳出視窗
+        // 網頁載入完成自動跳出第一個視窗
         window.addEventListener('DOMContentLoaded', () => {
-            const modalElement = document.getElementById('welcomeModal');
-            const myModal = new bootstrap.Modal(modalElement);
-            myModal.show();
+            myModal1 = new bootstrap.Modal(document.getElementById('welcomeModal'));
+            myModal2 = new bootstrap.Modal(document.getElementById('missionModal'));
             
-            setTimeout(typeWriter, 600); // 延遲 0.6 秒開始打字
+            myModal1.show();
+            setTimeout(typeWriter1, 600); // 延遲 0.6 秒開始打第一個視窗的字
         });
 
-        // 打字機功能
-        function typeWriter() {
-            if (index < introText.length) {
-                document.getElementById("welcomeText").innerHTML += introText.charAt(index);
-                index++;
-                setTimeout(typeWriter, 60); // 60毫秒出一個字
+        // 第一個視窗的打字機
+        function typeWriter1() {
+            if (index1 < introText.length) {
+                document.getElementById("welcomeText").innerHTML += introText.charAt(index1);
+                index1++;
+                setTimeout(typeWriter1, 80); 
             } else {
-                document.getElementById("startBtn").classList.remove("d-none"); // 顯示按鈕
+                document.getElementById("startBtn").classList.remove("d-none"); 
             }
         }
 
-        // 點擊「開始穿越」按鈕
+        // 點擊「開始穿越」：放音樂、關閉第一個視窗、打開第二個視窗並開始打字
         function startAdventure() {
             const music = document.getElementById("bgMusic");
             if (music) {
                 music.play().catch(err => console.log("音樂播放受阻:", err));
             }
             
-            const modalElement = document.getElementById('welcomeModal');
-            const modalInstance = bootstrap.Modal.getInstance(modalElement);
-            modalInstance.hide();
+            myModal1.hide(); // 關閉第一個視窗
+            
+            // 等第一個視窗隱藏動畫結束後，再流暢打開第二個視窗
+            setTimeout(() => {
+                myModal2.show();
+                setTimeout(typeWriter2, 400); // 開始第二段打字
+            }, 400);
         }
 
+        // 第二個視窗的打字機
+        function typeWriter2() {
+            if (index2 < taskText.length) {
+                document.getElementById("missionText").innerHTML += taskText.charAt(index2);
+                index2++;
+                setTimeout(typeWriter2, 80); // 保持一樣的打字速度
+            } else {
+                document.getElementById("acceptBtn").classList.remove("d-none"); // 顯示接受任務按鈕
+            }
+        }
 
-        // --- 2. 表單答案驗證控制區 ---
+        // 點擊「接受任務」：關閉第二個視窗，正式進入遊戲填表
+        function closeMissionModal() {
+            myModal2.hide();
+        }
+
+        // --- 表單答案驗證控制區 ---
         document.getElementById('totalHistoryForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // 阻止網頁重整
+            event.preventDefault(); 
 
-            // 抓取三個時代的所有輸入值
             const paleoRelic = document.getElementById('PaleolithicAgeRelic').value.trim();
             const paleoSite  = document.getElementById('PaleolithicAgeSite').value.trim();
-            
             const neoRelic   = document.getElementById('NeolithicAgeRelic').value.trim();
             const neoSite    = document.getElementById('NeolithicAgeSite').value.trim();
-            
             const ironRelic  = document.getElementById('IronAgeRelic').value.trim();
             const ironSite   = document.getElementById('IronAgeSite').value.trim();
 
-            // 設定正確答案條件
             const isPaleoCorrect = (paleoRelic === "骨針縫獸皮" && paleoSite === "八仙洞");
             const isNeoCorrect   = (neoRelic === "卑南文化帶突起環狀玦形玉耳飾" && neoSite === "墾丁");
             const isIronCorrect  = (ironRelic === "青花瓷" && ironSite === "淇武蘭");
 
-            // 三個時代全部答對，才算過關
             if (isPaleoCorrect && isNeoCorrect && isIronCorrect) {
-                
                 alert("太厲害了！所有時代的歷史調查全部正確！");
-                // 這裡你可以指定最後通關要去的指定網頁（例如總成果頁面）
-                window.location.href = "https://shadowstean.github.io/TaiwaneseStoryGame/TaiwaneseStoryGame/IronAge.html";
-                
+                window.location.href = "https://shadowstean.github.io/TaiwaneseStoryGame/Seeker/Seeker_2.html";
             } else {
-                
-                // 只要有一題錯，就跳出警告
                 alert("答案中似乎有不正確的地方，請再仔細檢查看看課本喔！");
-                
             }
         });
     </script>

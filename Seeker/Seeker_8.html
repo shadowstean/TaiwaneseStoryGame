@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seeker Ending - 記憶的消逝</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            /* 保持與所有關卡完全相同的背景圖片直連網址 */
+            background: url('https://lh3.googleusercontent.com/u/0/d/1LXQ3pcSpRuVaWD8IT5x7UYnh99Clg7yT') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .text-orange {
+            color: #ff8c00 !important;
+        }
+        .btn-choice {
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+        }
+        .btn-choice:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        /* 彈出視窗內的文字排版 */
+        .typewriter-text {
+            white-space: pre-line; /* 讓 \n 換行符號生效 */
+            line-height: 2;       /* 感傷結局的寬鬆行高 */
+            letter-spacing: 1.5px; /* 質感字距 */
+            font-size: 1.1rem;
+        }
+        /* 彈出視窗的神祕深紫色背景 */
+        .custom-modal-content {
+            background-color: #120c24 !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" src="https://docs.google.com/uc?export=download&id=1NxMhw9oB3QZw1Qdopaxq2mtxVtHB1bOd" loop autoplay></audio>
+
+    <div class="modal fade" id="endingModal2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-white custom-modal-content shadow-lg">
+                <div class="modal-body p-4 text-center">
+                    
+                    <h3 class="text-secondary fw-bold mb-2">2. 忽略歷史</h3>
+                    <h5 class="text-muted mb-4">（失落者結局）</h5>
+                    
+                    <h5 id="endingText2" class="typewriter-text fw-normal mb-4"></h5>
+                    
+                    <div id="actionArea" class="d-none">
+                        <hr class="border-secondary my-4">
+                        <button type="button" class="btn btn-outline-secondary btn-choice w-100 text-white fw-bold py-2" onclick="restartGame()">
+                            離開調查展廳
+                        </button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4 bg-black bg-opacity-25 text-center text-white">
+            <h2 class="text-muted mb-3">【 結局二：記憶的消逝 】</h2>
+            <p class="lead">歷史在沈默中被遺忘。</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // 依照圖片內容設定的結局二文字
+        const endingIntroText2 = "你選擇放下這些碎片，任由它們再次沈入黑暗。\n展廳中的光芒逐漸熄滅，文物化為塵埃，\n那些曾經存在的故事也再次歸於沈默。\n當人們不再記得過去，未來便失去了方向。\n\n你見證了記憶的消逝。";
+        
+        let index = 0;
+        let endingModal;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            endingModal = new bootstrap.Modal(document.getElementById('endingModal2'));
+            endingModal.show();
+            
+            setTimeout(typeWriter, 600);
+
+            // 全螢幕無感啟動背景音樂機制
+            const startMusicSilently = () => {
+                const music = document.getElementById("bgMusic");
+                if (music) {
+                    music.play().then(() => {
+                        document.removeEventListener('click', startMusicSilently);
+                        document.removeEventListener('touchstart', startMusicSilently);
+                        document.removeEventListener('scroll', startMusicSilently);
+                    }).catch(err => console.log("音樂播放受阻中..."));
+                }
+            };
+
+            document.addEventListener('click', startMusicSilently);
+            document.addEventListener('touchstart', startMusicSilently);
+            document.addEventListener('scroll', startMusicSilently);
+        });
+
+        // 打字機功能
+        function typeWriter() {
+            if (index < endingIntroText2.length) {
+                document.getElementById("endingText2").innerHTML += endingIntroText2.charAt(index);
+                index++;
+                // 使用穩重的速度（120ms）來呈現這份感傷
+                setTimeout(typeWriter, 120); 
+            } else {
+                document.getElementById("actionArea").classList.remove("d-none");
+            }
+        }
+
+        // 結束調查
+        function restartGame() {
+            alert("你已走出展廳。歷史已然消逝，探知者。");
+            // 可導回遊戲起點
+            // window.location.href = "Seeker.html";
+        }
+    </script>
+</body>
+</html>

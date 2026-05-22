@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seeker</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            /* 請替換成你轉址後的 Google 雲端硬碟圖片直連網址 */
+            background: url('https://lh3.googleusercontent.com/u/0/d/1LXQ3pcSpRuVaWD8IT5x7UYnh99Clg7yT') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .text-orange {
+            color: #ff8c00 !important;
+        }
+        .btn-orange {
+            background-color: #ff8c00 !important; /* 你的主色橘色 */
+            border-color: #ff8c00 !important;     /* 邊框顏色 */
+        }
+
+        /* 加上滑鼠滑過或手指點擊時的加深效果，體驗會更好 */
+        .btn-orange:hover, .btn-orange:active, .btn-orange:focus {
+            background-color: #e07b00 !important; /* 點擊時顏色稍微變深 */
+            border-color: #e07b00 !important;
+            box-shadow: 0 0 0 0.25rem rgba(255, 140, 0, 0.25) !important; /* 點擊時的微光外圈 */
+        }
+
+        /* 彈出視窗內的文字排版 */
+        #welcomeText {
+            white-space: pre-line; /* 讓文字中的 \n 換行符號生效 */
+            line-height: 2;       /* 增加行高，手機看更舒適 */
+            letter-spacing: 2px;   /* 字距微調，增加質感 */
+            font-size: 1.15rem;
+        }
+        /* 彈出視窗的神祕深紫色背景 */
+        .custom-modal-content {
+            background-color: #120c24 !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" src="https://docs.google.com/uc?export=download&id=1NxMhw9oB3QZw1Qdopaxq2mtxVtHB1bOd" loop></audio>
+
+    <div class="modal fade" id="welcomeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-white custom-modal-content shadow-lg">
+                <div class="modal-body text-center p-4">
+                    
+                    <h5 id="welcomeText" class="fw-normal mb-4"></h5>
+                    
+                    <button type="button" id="startBtn" class="btn btn-outline-light w-100 fw-bold d-none" onclick="startAdventure()">
+                        開始穿越
+                    </button>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="card shadow-lg p-4 bg-black bg-opacity-25">
+            
+            <form id="totalHistoryForm">
+                
+                <h2 class="text-center text-orange mb-3">舊石器時代</h2>
+                <div class="mb-3">
+                    <label class="form-label text-white">遺物</label>
+                    <input type="text" id="PaleolithicAgeRelic" class="form-control" placeholder="輸入遺物名稱" required autocomplete="off">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-white">遺址</label>
+                    <input type="text" id="PaleolithicAgeSite" class="form-control" placeholder="輸入遺址名稱" required autocomplete="off">
+                </div>
+                
+                <h2 class="text-center text-orange mb-3">新石器時代</h2>
+                <div class="mb-3">
+                    <label class="form-label text-white">遺物</label>
+                    <input type="text" id="NeolithicAgeRelic" class="form-control" placeholder="輸入遺物名稱" required autocomplete="off">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-white">遺址</label>
+                    <input type="text" id="NeolithicAgeSite" class="form-control" placeholder="輸入遺址名稱" required autocomplete="off">
+                </div>
+
+                <h2 class="text-center text-orange mb-3">鐵器時代</h2>
+                <div class="mb-3">
+                    <label class="form-label text-white">遺物</label>
+                    <input type="text" id="IronAgeRelic" class="form-control" placeholder="輸入遺物名稱" required autocomplete="off">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-white">遺址</label>
+                    <input type="text" id="IronAgeSite" class="form-control" placeholder="輸入遺址名稱" required autocomplete="off">
+                </div>
+                
+                <button type="submit" class="btn btn-orange w-100 text-white">提交</button>
+            </form>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- 1. 打字機與音樂控制區 ---
+        const introText = "歡迎各位探知者參與本次的歷史調查\n由於歷史有很多資料不見\n各位探知者們將收集消失的歷史\n本次調查的地方為「台灣」 如果準備好的話\n我們即將進行穿越";
+        let index = 0;
+
+        // 網頁載入完成自動跳出視窗
+        window.addEventListener('DOMContentLoaded', () => {
+            const modalElement = document.getElementById('welcomeModal');
+            const myModal = new bootstrap.Modal(modalElement);
+            myModal.show();
+            
+            setTimeout(typeWriter, 600); // 延遲 0.6 秒開始打字
+        });
+
+        // 打字機功能
+        function typeWriter() {
+            if (index < introText.length) {
+                document.getElementById("welcomeText").innerHTML += introText.charAt(index);
+                index++;
+                setTimeout(typeWriter, 60); // 60毫秒出一個字
+            } else {
+                document.getElementById("startBtn").classList.remove("d-none"); // 顯示按鈕
+            }
+        }
+
+        // 點擊「開始穿越」按鈕
+        function startAdventure() {
+            const music = document.getElementById("bgMusic");
+            if (music) {
+                music.play().catch(err => console.log("音樂播放受阻:", err));
+            }
+            
+            const modalElement = document.getElementById('welcomeModal');
+            const modalInstance = bootstrap.Modal.getInstance(modalElement);
+            modalInstance.hide();
+        }
+
+
+        // --- 2. 表單答案驗證控制區 ---
+        document.getElementById('totalHistoryForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // 阻止網頁重整
+
+            // 抓取三個時代的所有輸入值
+            const paleoRelic = document.getElementById('PaleolithicAgeRelic').value.trim();
+            const paleoSite  = document.getElementById('PaleolithicAgeSite').value.trim();
+            
+            const neoRelic   = document.getElementById('NeolithicAgeRelic').value.trim();
+            const neoSite    = document.getElementById('NeolithicAgeSite').value.trim();
+            
+            const ironRelic  = document.getElementById('IronAgeRelic').value.trim();
+            const ironSite   = document.getElementById('IronAgeSite').value.trim();
+
+            // 設定正確答案條件
+            const isPaleoCorrect = (paleoRelic === "骨針縫獸皮" && paleoSite === "八仙洞");
+            const isNeoCorrect   = (neoRelic === "卑南文化帶突起環狀玦形玉耳飾" && neoSite === "墾丁");
+            const isIronCorrect  = (ironRelic === "青花瓷" && ironSite === "淇武蘭");
+
+            // 三個時代全部答對，才算過關
+            if (isPaleoCorrect && isNeoCorrect && isIronCorrect) {
+                
+                alert("太厲害了！所有時代的歷史調查全部正確！");
+                // 這裡你可以指定最後通關要去的指定網頁（例如總成果頁面）
+                window.location.href = "https://shadowstean.github.io/TaiwaneseStoryGame/TaiwaneseStoryGame/IronAge.html";
+                
+            } else {
+                
+                // 只要有一題錯，就跳出警告
+                alert("答案中似乎有不正確的地方，請再仔細檢查看看課本喔！");
+                
+            }
+        });
+    </script>
+</body>
+</html>

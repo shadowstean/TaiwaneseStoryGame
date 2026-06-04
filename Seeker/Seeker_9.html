@@ -20,10 +20,6 @@
         .btn-orange { background-color: #ff8c00 !important; border-color: #ff8c00 !important; color: white !important; }
         .btn-orange:hover { background-color: #e07b00 !important; }
 
-        /* 隱藏未啟動的關卡區塊 */
-        .game-section { display: none; }
-        .game-section.active { display: block; }
-
         /* 彈出視窗樣式 */
         .custom-modal-content {
             background-color: #120c24 !important;
@@ -36,6 +32,12 @@
             line-height: 1.8;
             letter-spacing: 1px;
             font-size: 1.05rem;
+        }
+        /* 第一關專用網格樣式 */
+        .stage1-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
         /* 詩詞填空樣式 */
         .poem-input {
@@ -59,26 +61,21 @@
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content custom-modal-content shadow-lg">
                 <div class="modal-body p-4">
-                    
-                    <!-- 文本顯示區 -->
                     <h5 id="modalDisplayText" class="typewriter-text fw-normal mb-4 text-center"></h5>
-                    
-                    <!-- 答案輸入區 (會根據關卡動態更換內容) -->
                     <div id="modalInputArea" class="d-none">
                         <hr class="border-secondary my-4">
                         <div id="dynamicInputContent"></div>
                     </div>
-
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 主網頁展示背景內容 -->
+    <!-- 主頁面內容 -->
     <div class="container mt-5">
         <div class="card shadow-lg p-4 bg-black bg-opacity-25 text-center text-white">
             <h2 id="mainTitle" class="text-orange mb-3">準備開始調查</h2>
-            <p id="mainDesc" class="lead">請點擊下方按鈕啟動任務...</p>
+            <p id="mainDesc" class="lead">請點擊下方按鈕啟動裝置...</p>
             <button id="startBtn" class="btn btn-orange btn-lg px-5" onclick="initGame()">啟動裝置</button>
         </div>
     </div>
@@ -97,9 +94,18 @@
         // 關卡資料庫
         const stages = {
             1: {
-                title: "第一關：啟程",
-                text: "探知者，歡迎來到現場。\n請拿出道具包中的信封0\n輸入信封上的通關密語。",
-                render: () => `<input type="text" id="ansField" class="form-control bg-dark text-white text-center mb-3" placeholder="請輸入密語"><button class="btn btn-orange w-100" onclick="checkAns('START')">解鎖</button>`
+                title: "第一關：史前文明的足跡",
+                text: "探知者，要解開這座島嶼的秘密，\n我們必須溯源而上。\n請根據時代線索，填入對應的遺物與遺址名稱：",
+                render: () => `
+                    <div class="stage1-grid mb-4">
+                        <input type="text" id="s1_1" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺物">
+                        <input type="text" id="s1_2" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺址">
+                        <input type="text" id="s1_3" class="form-control bg-dark text-white border-secondary" placeholder="新石器遺物">
+                        <input type="text" id="s1_4" class="form-control bg-dark text-white border-secondary" placeholder="新石器遺址">
+                        <input type="text" id="s1_5" class="form-control bg-dark text-white border-secondary" placeholder="鐵器時代遺物">
+                        <input type="text" id="s1_6" class="form-control bg-dark text-white border-secondary" placeholder="鐵器時代遺址">
+                    </div>
+                    <button class="btn btn-orange w-100" onclick="checkStage1()">解鎖第一道門</button>`
             },
             2: {
                 title: "第二關：倚海而生的島與人",
@@ -143,15 +149,33 @@
             }
         };
 
-        // 初始化遊戲
+        // 第一關驗證邏輯
+        function checkStage1() {
+            const a1 = document.getElementById('s1_1').value.trim();
+            const a2 = document.getElementById('s1_2').value.trim();
+            const a3 = document.getElementById('s1_3').value.trim();
+            const a4 = document.getElementById('s1_4').value.trim();
+            const a5 = document.getElementById('s1_5').value.trim();
+            const a6 = document.getElementById('s1_6').value.trim();
+
+            if (a1 === "骨針縫獸皮" && a2 === "八仙洞" && a3 === "卑南文化帶四突起環狀玦形玉耳飾" && 
+                a4 === "墾丁" && a5 === "青花碟" && a6 === "淇武蘭") {
+                alert("正確！已啟動時光引擎，進入下一階段。");
+                nextStage();
+            } else {
+                alert("填寫的答案好像有誤，請再確認一下遺址與遺物的對應喔！");
+            }
+        }
+
+        // --- 以下為通用核心功能 (與先前版本相同) ---
+
         function initGame() {
             gameModal = new bootstrap.Modal(document.getElementById('gameModal'));
-            music.play().catch(() => console.log("等待交互啟動音樂"));
+            music.play().catch(() => {});
             loadStage(1);
             document.getElementById('startBtn').style.display = 'none';
         }
 
-        // 載入關卡
         function loadStage(s) {
             currentStep = s;
             index = 0;
@@ -163,7 +187,6 @@
             document.getElementById('mainTitle').innerText = stages[s].title;
         }
 
-        // 打字機
         function typeWriter(fullText) {
             if (index < fullText.length) {
                 modalTextEl.innerHTML += fullText.charAt(index);
@@ -174,42 +197,31 @@
             }
         }
 
-        // 通用答案檢查
         function checkAns(correct) {
             const val = document.getElementById('ansField').value.trim().toUpperCase();
-            if (val.includes(correct)) {
-                alert("正確！即將進入下一關。");
-                nextStage();
-            } else { alert("答案不對喔，再試試看！"); }
+            if (val.includes(correct)) { nextStage(); } else { alert("再想想看！"); }
         }
 
-        // 詩詞檢查
         function checkPoem() {
             const p1 = document.getElementById('p1').value.trim();
             const p2 = document.getElementById('p2').value.trim();
             const p3 = document.getElementById('p3').value.trim();
             const p4 = document.getElementById('p4').value.trim();
-            if (p1==="鬼門關" && p2==="個" && p3==="無人" && p4==="生死") {
-                nextStage();
-            } else { alert("詩詞填空有誤！"); }
+            if (p1==="鬼門關" && p2==="個" && p3==="無人" && p4==="生死") { nextStage(); } else { alert("詩句填寫有誤！"); }
         }
 
-        // 標題檢查
         function checkTitles() {
             const t = [document.getElementById('t1').value.trim(), document.getElementById('t2').value.trim(), 
                         document.getElementById('t3').value.trim(), document.getElementById('t4').value.trim()];
             const ans = ["反共復國基地", "一同走過的記憶", "經濟奇蹟的幕後", "社會力的爆發"];
-            if (JSON.stringify(t) === JSON.stringify(ans)) { nextStage(); } else { alert("順序或內容有誤！"); }
+            if (JSON.stringify(t) === JSON.stringify(ans)) { nextStage(); } else { alert("順序或標題有誤！"); }
         }
 
         function nextStage() {
             gameModal.hide();
-            setTimeout(() => {
-                if (stages[currentStep + 1]) loadStage(currentStep + 1);
-            }, 500);
+            setTimeout(() => { if (stages[currentStep + 1]) loadStage(currentStep + 1); }, 500);
         }
 
-        // 結局展示
         function showEnding(type) {
             const endings = {
                 1: "你選擇將所有記憶碎片完整保存，讓過去的聲音得以延續...\n你成為了記憶的守護者。",
@@ -219,7 +231,6 @@
             modalTextEl.innerHTML = "";
             index = 0;
             inputAreaEl.classList.add("d-none");
-            document.getElementById('mainTitle').innerText = "旅程結束";
             typeWriter(endings[type]);
             dynamicContentEl.innerHTML = `<button class="btn btn-orange w-100" onclick="location.reload()">重新開始調查</button>`;
         }

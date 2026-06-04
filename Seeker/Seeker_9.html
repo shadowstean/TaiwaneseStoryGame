@@ -3,131 +3,225 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seeker Ending - 新時代的開拓者</title>
+    <title>Seeker - 歷史探知者完整版</title>
 
+    <!-- 引入 Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     
     <style>
         body {
-            /* 保持與所有關卡完全相同的背景圖片直連網址 */
             background: url('https://lh3.googleusercontent.com/u/0/d/1LXQ3pcSpRuVaWD8IT5x7UYnh99Clg7yT') no-repeat center center fixed;
             background-size: cover;
             min-height: 100vh;
             margin: 0;
+            overflow-x: hidden;
         }
-        .text-orange {
-            color: #ff8c00 !important;
-        }
-        .btn-cyan {
-            background-color: #0dcaf0 !important;
-            border-color: #0dcaf0 !important;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
-        }
-        .btn-cyan:hover, .btn-cyan:active, .btn-cyan:focus {
-            background-color: #0baccc !important;
-            border-color: #0baccc !important;
-            transform: scale(1.02);
-            box-shadow: 0 0 15px rgba(13, 202, 240, 0.4) !important;
-        }
+        .text-orange { color: #ff8c00 !important; }
+        .btn-orange { background-color: #ff8c00 !important; border-color: #ff8c00 !important; color: white !important; }
+        .btn-orange:hover { background-color: #e07b00 !important; }
 
-        /* 彈出視窗內的文字排版 */
-        .typewriter-text {
-            white-space: pre-line; /* 讓 \n 換行符號生效 */
-            line-height: 2;       /* 開拓者結局的流暢行高 */
-            letter-spacing: 1.5px; /* 質感字距 */
-            font-size: 1.1rem;
-        }
-        /* 彈出視窗的神祕深紫色背景 */
+        /* 隱藏未啟動的關卡區塊 */
+        .game-section { display: none; }
+        .game-section.active { display: block; }
+
+        /* 彈出視窗樣式 */
         .custom-modal-content {
             background-color: #120c24 !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             border-radius: 15px;
+            color: white;
         }
+        .typewriter-text {
+            white-space: pre-line;
+            line-height: 1.8;
+            letter-spacing: 1px;
+            font-size: 1.05rem;
+        }
+        /* 詩詞填空樣式 */
+        .poem-input {
+            width: 85px;
+            display: inline-block;
+            border-bottom: 2px solid #ff8c00 !important;
+            border-top: none !important; border-left: none !important; border-right: none !important;
+            border-radius: 0 !important; background: transparent !important; color: #ff8c00 !important;
+            text-align: center;
+        }
+        .title-number { font-size: 1.2rem; font-weight: bold; color: #ff8c00; width: 30px; }
     </style>
 </head>
 <body>
 
-    <audio id="bgMusic" src="https://docs.google.com/uc?export=download&id=1NxMhw9oB3QZw1Qdopaxq2mtxVtHB1bOd" loop autoplay></audio>
+    <!-- 背景音樂 -->
+    <audio id="bgMusic" src="https://docs.google.com/uc?export=download&id=1NxMhw9oB3QZw1Qdopaxq2mtxVtHB1bOd" loop></audio>
 
-    <div class="modal fade" id="endingModal3" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content text-white custom-modal-content shadow-lg">
-                <div class="modal-body p-4 text-center">
+    <!-- 通用彈出視窗容器 -->
+    <div class="modal fade" id="gameModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content custom-modal-content shadow-lg">
+                <div class="modal-body p-4">
                     
-                    <h3 class="text-info fw-bold mb-2">3. 創造新歷史</h3>
-                    <h5 class="text-muted mb-4">（開拓者結局）</h5>
+                    <!-- 文本顯示區 -->
+                    <h5 id="modalDisplayText" class="typewriter-text fw-normal mb-4 text-center"></h5>
                     
-                    <h5 id="endingText3" class="typewriter-text fw-normal mb-4"></h5>
-                    
-                    <div id="actionArea" class="d-none">
+                    <!-- 答案輸入區 (會根據關卡動態更換內容) -->
+                    <div id="modalInputArea" class="d-none">
                         <hr class="border-secondary my-4">
-                        <button type="button" class="btn btn-cyan w-100 text-dark fw-bold py-2" onclick="restartGame()">
-                            迎向新時代
-                        </button>
+                        <div id="dynamicInputContent"></div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- 主網頁展示背景內容 -->
     <div class="container mt-5">
         <div class="card shadow-lg p-4 bg-black bg-opacity-25 text-center text-white">
-            <h2 class="text-info mb-3">【 結局三：新時代的開拓者 】</h2>
-            <p class="lead">歷史由你延伸，未來由你塑造。</p>
+            <h2 id="mainTitle" class="text-orange mb-3">準備開始調查</h2>
+            <p id="mainDesc" class="lead">請點擊下方按鈕啟動任務...</p>
+            <button id="startBtn" class="btn btn-orange btn-lg px-5" onclick="initGame()">啟動裝置</button>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // 依照圖片內容設定的結局三文字
-        const endingIntroText3 = "你選擇以過去為基石，寫下屬於這個時代的新篇章。\n歷史碎片在你手中重新組合，與當代的聲音交織成前所未有的模樣。\n未來不再只是繼承，而是由每一個人的選擇共同塑造。\n\n你成為了新時代的開拓者。";
-        
+        let currentStep = 1;
         let index = 0;
-        let endingModal;
+        let gameModal;
+        const modalTextEl = document.getElementById("modalDisplayText");
+        const inputAreaEl = document.getElementById("modalInputArea");
+        const dynamicContentEl = document.getElementById("dynamicInputContent");
+        const music = document.getElementById("bgMusic");
 
-        window.addEventListener('DOMContentLoaded', () => {
-            endingModal = new bootstrap.Modal(document.getElementById('endingModal3'));
-            endingModal.show();
-            
-            setTimeout(typeWriter, 600);
+        // 關卡資料庫
+        const stages = {
+            1: {
+                title: "第一關：啟程",
+                text: "探知者，歡迎來到現場。\n請拿出道具包中的信封0\n輸入信封上的通關密語。",
+                render: () => `<input type="text" id="ansField" class="form-control bg-dark text-white text-center mb-3" placeholder="請輸入密語"><button class="btn btn-orange w-100" onclick="checkAns('START')">解鎖</button>`
+            },
+            2: {
+                title: "第二關：倚海而生的島與人",
+                text: "接著來到「倚海而生的島與人」\n在道具包中拿出信封1和探秘紙\n透過探秘紙拼出英文單字",
+                render: () => `<input type="text" id="ansField" class="form-control bg-dark text-white text-center mb-3" placeholder="請輸入英文單字"><button class="btn btn-orange w-100" onclick="checkAns('ABYSS')">提交</button>`
+            },
+            3: {
+                title: "第三關：山海之間的共存與競逐",
+                text: "請在展場內找到失去的詩詞\n並填入下方空白處：",
+                render: () => `
+                    <div class="text-center poem-zone text-white small mb-3">
+                        勸君切莫過台灣，台灣恰似 <input id="p1" class="poem-input">，<br>
+                        千 <input id="p2" class="poem-input"> 人去 <input id="p3" class="poem-input"> 轉，知 <input id="p4" class="poem-input"> 都是難。
+                    </div>
+                    <button class="btn btn-orange w-100" onclick="checkPoem()">提交</button>`
+            },
+            4: {
+                title: "第四關：新秩序下的苦悶與夢想",
+                text: "拿出信封2的道具在展區內\n找到對的順序(由北到南)\n並且在下方填入對的數字",
+                render: () => `<input type="text" id="ansField" class="form-control bg-dark text-white text-center mb-3" placeholder="請輸入數字密碼"><button class="btn btn-orange w-100" onclick="checkAns('18941945')">解鎖</button>`
+            },
+            5: {
+                title: "第五關：走向民主這條路",
+                text: "這個展區有四大標題請依序填入：",
+                render: () => `
+                    <div class="mb-2 d-flex"><span class="title-number">1</span><input id="t1" class="form-control bg-dark text-white mb-2"></div>
+                    <div class="mb-2 d-flex"><span class="title-number">2</span><input id="t2" class="form-control bg-dark text-white mb-2"></div>
+                    <div class="mb-2 d-flex"><span class="title-number">3</span><input id="t3" class="form-control bg-dark text-white mb-2"></div>
+                    <div class="mb-3 d-flex"><span class="title-number">4</span><input id="t4" class="form-control bg-dark text-white mb-2"></div>
+                    <button class="btn btn-orange w-100" onclick="checkTitles()">提交</button>`
+            },
+            6: {
+                title: "最終關：大家的博物館",
+                text: "歷史的火炬已傳遞到你們手中\n\n請選擇你的結局：",
+                render: () => `
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-warning" onclick="showEnding(1)">1. 保留歷史</button>
+                        <button class="btn btn-outline-secondary" onclick="showEnding(2)">2. 忽略歷史</button>
+                        <button class="btn btn-outline-info" onclick="showEnding(3)">3. 創造新歷史</button>
+                    </div>`
+            }
+        };
 
-            // 全螢幕無感啟動背景音樂機制
-            const startMusicSilently = () => {
-                const music = document.getElementById("bgMusic");
-                if (music) {
-                    music.play().then(() => {
-                        document.removeEventListener('click', startMusicSilently);
-                        document.removeEventListener('touchstart', startMusicSilently);
-                        document.removeEventListener('scroll', startMusicSilently);
-                    }).catch(err => console.log("等待玩家操作中..."));
-                }
-            };
+        // 初始化遊戲
+        function initGame() {
+            gameModal = new bootstrap.Modal(document.getElementById('gameModal'));
+            music.play().catch(() => console.log("等待交互啟動音樂"));
+            loadStage(1);
+            document.getElementById('startBtn').style.display = 'none';
+        }
 
-            document.addEventListener('click', startMusicSilently);
-            document.addEventListener('touchstart', startMusicSilently);
-            document.addEventListener('scroll', startMusicSilently);
-        });
+        // 載入關卡
+        function loadStage(s) {
+            currentStep = s;
+            index = 0;
+            modalTextEl.innerHTML = "";
+            inputAreaEl.classList.add("d-none");
+            dynamicContentEl.innerHTML = stages[s].render();
+            gameModal.show();
+            typeWriter(stages[s].text);
+            document.getElementById('mainTitle').innerText = stages[s].title;
+        }
 
-        // 打字機功能
-        function typeWriter() {
-            if (index < endingIntroText3.length) {
-                document.getElementById("endingText3").innerHTML += endingIntroText3.charAt(index);
+        // 打字機
+        function typeWriter(fullText) {
+            if (index < fullText.length) {
+                modalTextEl.innerHTML += fullText.charAt(index);
                 index++;
-                // 保持流暢有質感的 100ms 字幕播放速度
-                setTimeout(typeWriter, 100); 
+                setTimeout(() => typeWriter(fullText), 70);
             } else {
-                document.getElementById("actionArea").classList.remove("d-none");
+                inputAreaEl.classList.remove("d-none");
             }
         }
 
-        // 結束歷史調查後的行為
-        function restartGame() {
-            alert("新時代的序幕已然拉開。辛苦了，開拓者！本次歷史調查圓滿落幕。");
-            // 可視需求導回主畫面
-            // window.location.href = "Seeker.html";
+        // 通用答案檢查
+        function checkAns(correct) {
+            const val = document.getElementById('ansField').value.trim().toUpperCase();
+            if (val.includes(correct)) {
+                alert("正確！即將進入下一關。");
+                nextStage();
+            } else { alert("答案不對喔，再試試看！"); }
+        }
+
+        // 詩詞檢查
+        function checkPoem() {
+            const p1 = document.getElementById('p1').value.trim();
+            const p2 = document.getElementById('p2').value.trim();
+            const p3 = document.getElementById('p3').value.trim();
+            const p4 = document.getElementById('p4').value.trim();
+            if (p1==="鬼門關" && p2==="個" && p3==="無人" && p4==="生死") {
+                nextStage();
+            } else { alert("詩詞填空有誤！"); }
+        }
+
+        // 標題檢查
+        function checkTitles() {
+            const t = [document.getElementById('t1').value.trim(), document.getElementById('t2').value.trim(), 
+                        document.getElementById('t3').value.trim(), document.getElementById('t4').value.trim()];
+            const ans = ["反共復國基地", "一同走過的記憶", "經濟奇蹟的幕後", "社會力的爆發"];
+            if (JSON.stringify(t) === JSON.stringify(ans)) { nextStage(); } else { alert("順序或內容有誤！"); }
+        }
+
+        function nextStage() {
+            gameModal.hide();
+            setTimeout(() => {
+                if (stages[currentStep + 1]) loadStage(currentStep + 1);
+            }, 500);
+        }
+
+        // 結局展示
+        function showEnding(type) {
+            const endings = {
+                1: "你選擇將所有記憶碎片完整保存，讓過去的聲音得以延續...\n你成為了記憶的守護者。",
+                2: "你選擇放下這些碎片，任由它們再次沈入黑暗...\n你見證了記憶的消逝。",
+                3: "你選擇以過去為基石，寫下屬於這個時代的新篇章...\n你成為了新時代的開拓者。"
+            };
+            modalTextEl.innerHTML = "";
+            index = 0;
+            inputAreaEl.classList.add("d-none");
+            document.getElementById('mainTitle').innerText = "旅程結束";
+            typeWriter(endings[type]);
+            dynamicContentEl.innerHTML = `<button class="btn btn-orange w-100" onclick="location.reload()">重新開始調查</button>`;
         }
     </script>
 </body>

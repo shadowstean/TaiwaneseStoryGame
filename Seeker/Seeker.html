@@ -49,12 +49,21 @@
             text-align: center;
         }
         .title-number { font-size: 1.2rem; font-weight: bold; color: #ff8c00; width: 30px; }
+        /* 強制讓深色輸入框底下的 Placeholder 顯示出來 */
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.4) !important; /* 半透明白色，使其在深色背景中清晰可見 */
+            font-size: 0.95rem;
+        }
+        /* 針對各家瀏覽器核心的相容性設定 */
+        .form-control::-webkit-input-placeholder { color: rgba(255, 255, 255, 0.4) !important; }
+        .form-control::-moz-placeholder { color: rgba(255, 255, 255, 0.4) !important; }
+        .form-control:-ms-input-placeholder { color: rgba(255, 255, 255, 0.4) !important; }
     </style>
 </head>
 <body>
 
     <!-- 背景音樂 -->
-    <audio id="bgMusic" src="https://docs.google.com/uc?export=download&id=1NxMhw9oB3QZw1Qdopaxq2mtxVtHB1bOd" loop></audio>
+    <audio id="bgMusic" src="https://shadowstean.github.io/TaiwaneseStoryGame/Seeker/Dark.mp3" loop></audio>
 
     <!-- 通用彈出視窗容器 -->
     <div class="modal fade" id="gameModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
@@ -98,43 +107,43 @@
                 text: "探知者，要解開這座島嶼的秘密，\n我們必須溯源而上。\n請根據時代線索，填入對應的遺物與遺址名稱：",
                 render: () => `
                     <div class="stage1-grid mb-4">
-                        <input type="text" id="s1_1" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺物">
-                        <input type="text" id="s1_2" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺址">
-                        <input type="text" id="s1_3" class="form-control bg-dark text-white border-secondary" placeholder="新石器遺物">
-                        <input type="text" id="s1_4" class="form-control bg-dark text-white border-secondary" placeholder="新石器遺址">
-                        <input type="text" id="s1_5" class="form-control bg-dark text-white border-secondary" placeholder="鐵器時代遺物">
-                        <input type="text" id="s1_6" class="form-control bg-dark text-white border-secondary" placeholder="鐵器時代遺址">
+                        <input type="text" id="s1_1" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺物" autocomplete="off">
+                        <input type="text" id="s1_2" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺址" autocomplete="off">
+                        <input type="text" id="s1_3" class="form-control bg-dark text-white border-secondary" placeholder="新石器遺物" autocomplete="off">
+                        <input type="text" id="s1_4" class="form-control bg-dark text-white border-secondary" placeholder="新石器遺址" autocomplete="off">
+                        <input type="text" id="s1_5" class="form-control bg-dark text-white border-secondary" placeholder="鐵器時代遺物" autocomplete="off">
+                        <input type="text" id="s1_6" class="form-control bg-dark text-white border-secondary" placeholder="鐵器時代遺址" autocomplete="off">
                     </div>
                     <button class="btn btn-orange w-100" onclick="checkStage1()">解鎖第一道門</button>`
             },
             2: {
                 title: "第二關：倚海而生的島與人",
                 text: "接著來到「倚海而生的島與人」\n在道具包中拿出信封1和探秘紙\n透過探秘紙拼出英文單字",
-                render: () => `<input type="text" id="ansField" class="form-control bg-dark text-white text-center mb-3" placeholder="請輸入英文單字"><button class="btn btn-orange w-100" onclick="checkAns('ABYSS')">提交</button>`
+                render: () => `<input type="text" id="ansField" class="form-control bg-dark text-white text-center mb-3" placeholder="請輸入英文單字" autocomplete="off"><button class="btn btn-orange w-100" onclick="checkAns('ABYSS')">提交</button>`
             },
             3: {
                 title: "第三關：山海之間的共存與競逐",
                 text: "請在展場內找到失去的詩詞\n並填入下方空白處：",
                 render: () => `
                     <div class="text-center poem-zone text-white small mb-3">
-                        勸君切莫過台灣，台灣恰似 <input id="p1" class="poem-input">，<br>
-                        千 <input id="p2" class="poem-input"> 人去 <input id="p3" class="poem-input"> 轉，知 <input id="p4" class="poem-input"> 都是難。
+                        勸君切莫過台灣，台灣恰似 <input id="p1" class="poem-input" autocomplete="off">，<br>
+                        千 <input id="p2" class="poem-input" autocomplete="off"> 人去 <input id="p3" class="poem-input" autocomplete="off"> 轉，知 <input id="p4" class="poem-input" autocomplete="off"> 都是難。
                     </div>
                     <button class="btn btn-orange w-100" onclick="checkPoem()">提交</button>`
             },
             4: {
                 title: "第四關：新秩序下的苦悶與夢想",
                 text: "拿出信封2的道具在展區內\n找到對的順序(由北到南)\n並且在下方填入對的數字",
-                render: () => `<input type="text" id="ansField" class="form-control bg-dark text-white text-center mb-3" placeholder="請輸入數字密碼"><button class="btn btn-orange w-100" onclick="checkAns('18941945')">解鎖</button>`
+                render: () => `<input type="text" id="ansField" class="form-control bg-dark text-white text-center mb-3" placeholder="請輸入數字密碼" autocomplete="off"><button class="btn btn-orange w-100" onclick="checkAns('18941945')">解鎖</button>`
             },
             5: {
                 title: "第五關：走向民主這條路",
                 text: "這個展區有四大標題請依序填入：",
                 render: () => `
-                    <div class="mb-2 d-flex"><span class="title-number">1</span><input id="t1" class="form-control bg-dark text-white mb-2"></div>
-                    <div class="mb-2 d-flex"><span class="title-number">2</span><input id="t2" class="form-control bg-dark text-white mb-2"></div>
-                    <div class="mb-2 d-flex"><span class="title-number">3</span><input id="t3" class="form-control bg-dark text-white mb-2"></div>
-                    <div class="mb-3 d-flex"><span class="title-number">4</span><input id="t4" class="form-control bg-dark text-white mb-2"></div>
+                    <div class="mb-2 d-flex"><span class="title-number">1</span><input id="t1" class="form-control bg-dark text-white mb-2" autocomplete="off"></div>
+                    <div class="mb-2 d-flex"><span class="title-number">2</span><input id="t2" class="form-control bg-dark text-white mb-2" autocomplete="off"></div>
+                    <div class="mb-2 d-flex"><span class="title-number">3</span><input id="t3" class="form-control bg-dark text-white mb-2" autocomplete="off"></div>
+                    <div class="mb-3 d-flex"><span class="title-number">4</span><input id="t4" class="form-control bg-dark text-white mb-2" autocomplete="off"></div>
                     <button class="btn btn-orange w-100" onclick="checkTitles()">提交</button>`
             },
             6: {

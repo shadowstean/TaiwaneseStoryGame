@@ -58,6 +58,29 @@
         .form-control::-webkit-input-placeholder { color: rgba(255, 255, 255, 0.4) !important; }
         .form-control::-moz-placeholder { color: rgba(255, 255, 255, 0.4) !important; }
         .form-control:-ms-input-placeholder { color: rgba(255, 255, 255, 0.4) !important; }
+
+        /* 第一關文物圖片展示區樣式（確保在手機上也能橫向完美並排不跑版） */
+        .artifact-zone {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: nowrap; /* 強制橫向並排，不換行 */
+            width: 100%;
+        }
+        .artifact-img {
+            width: 28%; /* 自動依視窗比例縮放，防止爆開 */
+            max-width: 120px; /* 限制最大寬度，避免電腦版看起來太大 */
+            height: auto;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.95); /* 帶純白底襯托手繪透明圖檔 */
+            padding: 5px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        .artifact-img:hover {
+            transform: scale(1.08); /* 滑鼠懸停時微微放大 */
+        }
     </style>
 </head>
 <body>
@@ -102,20 +125,27 @@
 
         // 關卡資料庫
         const stages = {
-            1: {
-                title: "第一關：史前文明的足跡",
-                text: "探知者，要解開這座島嶼的秘密，\n我們必須溯源而上。\n請根據時代線索，填入對應的遺物與遺址名稱：",
-                render: () => `
-                    <div class="stage1-grid mb-4">
-                        <input type="text" id="s1_1" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺物" autocomplete="off">
-                        <input type="text" id="s1_2" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺址" autocomplete="off">
-                        <input type="text" id="s1_3" class="form-control bg-dark text-white border-secondary" placeholder="新石器遺物" autocomplete="off">
-                        <input type="text" id="s1_4" class="form-control bg-dark text-white border-secondary" placeholder="新石器遺址" autocomplete="off">
-                        <input type="text" id="s1_5" class="form-control bg-dark text-white border-secondary" placeholder="鐵器時代遺物" autocomplete="off">
-                        <input type="text" id="s1_6" class="form-control bg-dark text-white border-secondary" placeholder="鐵器時代遺址" autocomplete="off">
-                    </div>
-                    <button class="btn btn-orange w-100" onclick="checkStage1()">解鎖第一道門</button>`
-            },
+    1: {
+        title: "第一關：史前文明的足跡",
+        text: "探知者，要解開這座島嶼的秘密，\n我們必須溯源而上。\n請根據時代線索，填入對應的遺物與遺址名稱：",
+        render: () => `
+            <div class="stage1-grid mb-4">
+                <input type="text" id="s1_1" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺物" autocomplete="off">
+                <input type="text" id="s1_2" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺址" autocomplete="off">
+                <input type="text" id="s1_3" class="form-control bg-dark text-white border-secondary" placeholder="新石器遺物" autocomplete="off">
+                <input type="text" id="s1_4" class="form-control bg-dark text-white border-secondary" placeholder="新石器遺址" autocomplete="off">
+                <input type="text" id="s1_5" class="form-control bg-dark text-white border-secondary" placeholder="鐵器時代遺物" autocomplete="off">
+                <input type="text" id="s1_6" class="form-control bg-dark text-white border-secondary" placeholder="鐵器時代遺址" autocomplete="off">
+            </div>
+            
+            <div class="artifact-zone mb-4">
+                <img src="https://shadowstean.github.io/TaiwaneseStoryGame/Seeker/bonk.jpg" class="artifact-img" alt="舊石器遺物" title="骨針縫獸皮">
+                <img src="https://shadowstean.github.io/TaiwaneseStoryGame/Seeker/ring.jpg" class="artifact-img" alt="新石器遺物" title="卑南文化玉耳飾">
+                <img src="https://shadowstean.github.io/TaiwaneseStoryGame/Seeker/bio.jpg" class="artifact-img" alt="鐵器時代遺物" title="青花碟">
+            </div>
+            
+            <button class="btn btn-orange w-100 py-2 fw-bold" onclick="checkStage1()">解鎖第一道門</button>`
+    },
             2: {
                 title: "第二關：倚海而生的島與人",
                 text: "接著來到「倚海而生的島與人」\n在道具包中拿出信封1和探秘紙\n透過探秘紙拼出英文單字",

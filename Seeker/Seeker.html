@@ -81,6 +81,16 @@
         .artifact-img:hover {
             transform: scale(1.08); /* 滑鼠懸停時微微放大 */
         }
+        /* 隊組名稱專用兩欄網格 */
+        .team-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* 兩欄等寬 */
+            gap: 15px;
+        }
+/* 讓帶有這個類別的元素橫跨兩格 */
+        .full-width-input {
+            grid-column: span 2; 
+        }
     </style>
 </head>
 <body>
@@ -107,7 +117,7 @@
     <div class="container mt-5">
         <div class="card shadow-lg p-4 bg-black bg-opacity-25 text-center text-white">
             <h2 id="mainTitle" class="text-orange mb-3">準備開始調查</h2>
-            <p id="mainDesc" class="lead">組名:Seeker<br>組員:蔡定叡、李坤諺、王勝竑、卓冠穎、李承澤、黃新燦<br>請點擊下方按鈕啟動裝置...</p>
+            <p id="mainDesc" class="lead">組名:親友會<br>組員:蔡定叡、李坤諺、王勝竑、卓冠穎、李承澤、黃新燦<br>請點擊下方按鈕啟動裝置...</p>
             <button id="startBtn" class="btn btn-orange btn-lg px-5" onclick="initGame()">啟動裝置</button>
         </div>
     </div>
@@ -125,10 +135,36 @@
 
         // 關卡資料庫
         const stages = {
-    1: {
-        title: "第一關：史前文明的足跡",
-        text: "探知者，要解開這座島嶼的秘密，\n我們必須溯源而上。\n請根據時代線索，填入對應的遺物與遺址名稱：",
-        render: () => `
+        1: {
+            title: "前敘",
+            text: "隊組名稱(選填)",
+            render: () => `
+            <div class="team-grid mb-4">
+                <input type="text" id="t_name" class="form-control bg-dark text-white border-secondary full-width-input" placeholder="組名" autocomplete="off">
+                <input type="text" class="form-control bg-dark text-white border-secondary" placeholder="組員" autocomplete="off">
+                <input type="text" class="form-control bg-dark text-white border-secondary" placeholder="組員" autocomplete="off">
+                <input type="text" class="form-control bg-dark text-white border-secondary" placeholder="組員" autocomplete="off">
+                <input type="text" class="form-control bg-dark text-white border-secondary" placeholder="組員" autocomplete="off">
+                <input type="text" class="form-control bg-dark text-white border-secondary" placeholder="組員" autocomplete="off">
+                <input type="text" class="form-control bg-dark text-white border-secondary" placeholder="組員" autocomplete="off">
+            </div>
+            <button class="btn btn-orange w-100" onclick="nextStage()">輸入</button>`
+        },
+        2: {
+            title: "序章：歷史的碎片",
+            text: "歡迎各位探知者參與本次的歷史調查\n由於歷史有很多資料不見\n各位探知者們將收集消失的歷史\n本次調查的地方為「台灣」如果準備好的話\n我們即將進行穿越",
+            render: () => `<button class="btn btn-orange w-100" onclick="nextStage()">開始穿越</button>`
+        },
+
+        3: {
+            title: "序章:地圖文本",
+            text: "為了理解台灣請各位探知者們在\n「台灣,交會之島」\n詳細閱讀並照者地圖前往下一關",
+            render: () => `<button class="btn btn-orange w-100" onclick="nextStage()">續..</button>`
+        },
+        4: {
+            title: "第一關：史前文明的足跡",
+            text: "探知者，要解開這座島嶼的秘密，\n我們必須溯源而上。\n請根據時代線索，填入對應的遺物與遺址名稱：",
+            render: () => `
             <div class="stage1-grid mb-4">
                 <input type="text" id="s1_1" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺物" autocomplete="off">
                 <input type="text" id="s1_2" class="form-control bg-dark text-white border-secondary" placeholder="舊石器遺址" autocomplete="off">
@@ -145,13 +181,13 @@
             </div>
             
             <button class="btn btn-orange w-100 py-2 fw-bold" onclick="checkStage1()">解鎖第一道門</button>`
-    },
-            2: {
+        },
+        5: {
                 title: "第二關：倚海而生的島與人",
                 text: "接著來到「倚海而生的島與人」\n在道具包中拿出信封1和探秘紙\n透過探秘紙拼出英文單字",
                 render: () => `<input type="text" id="ansField" class="form-control bg-dark text-white text-center mb-3" placeholder="請輸入英文單字" autocomplete="off"><button class="btn btn-orange w-100" onclick="checkAns('ABYSS')">提交</button>`
-            },
-            3: {
+        },
+        6: {
                 title: "第三關：山海之間的共存與競逐",
                 text: "請在展場內找到失去的詩詞\n並填入下方空白處：",
                 render: () => `
@@ -160,13 +196,13 @@
                         千 <input id="p2" class="poem-input" autocomplete="off"> 人去 <input id="p3" class="poem-input" autocomplete="off"> 轉，知 <input id="p4" class="poem-input" autocomplete="off"> 都是難。
                     </div>
                     <button class="btn btn-orange w-100" onclick="checkPoem()">提交</button>`
-            },
-            4: {
+        },
+        7: {
                 title: "第四關：新秩序下的苦悶與夢想",
                 text: "拿出信封2的道具在展區內\n找到對的順序(由北到南)\n並且在下方填入對的數字",
                 render: () => `<input type="text" id="ansField" class="form-control bg-dark text-white text-center mb-3" placeholder="請輸入數字密碼" autocomplete="off"><button class="btn btn-orange w-100" onclick="checkAns('18941945')">解鎖</button>`
-            },
-            5: {
+        },
+        8: {
                 title: "第五關：走向民主這條路",
                 text: "這個展區有四大標題請依序填入：",
                 render: () => `
@@ -175,8 +211,8 @@
                     <div class="mb-2 d-flex"><span class="title-number">3</span><input id="t3" class="form-control bg-dark text-white mb-2" autocomplete="off"></div>
                     <div class="mb-3 d-flex"><span class="title-number">4</span><input id="t4" class="form-control bg-dark text-white mb-2" autocomplete="off"></div>
                     <button class="btn btn-orange w-100" onclick="checkTitles()">提交</button>`
-            },
-            6: {
+        },
+        9: {
                 title: "最終關：大家的博物館",
                 text: "歷史的火炬已傳遞到你們手中\n\n請選擇你的結局：",
                 render: () => `
